@@ -33,12 +33,6 @@ async function handleLoginForm(event) {
     loginError.textContent = "Erreur lors de la tentative de connexion.";
   }
 }
-
-// Chargement initial des travaux et catégories
-async function loadInitialData() {
-  await loadCategories();
-  await loadWork();
-}
 // Fonction appelée après une connexion réussie
 function postLoginSuccess() {
   document.getElementById("btnModifier").style.display = "block";
@@ -77,54 +71,17 @@ async function loadCategories() {
     console.error("Erreur lors du chargement des catégories:", error);
   }
 }
-// Modification: Ajout des gestionnaires d'événements pour annuler et fermer la modale
-function setupModalEventListeners() {
-  const cancelDeleteButton = document.getElementById("cancelDelete");
-  const closeButtons = document.querySelectorAll(".modal .close");
-
-  // Gestionnaire pour le bouton d'annulation de suppression
-  if (cancelDeleteButton) {
-    cancelDeleteButton.addEventListener("click", () => {
-      document.getElementById("modalSuppression").style.display = "none";
-    });
-  }
-
-  // Gestionnaire pour tous les boutons de fermeture des modales
-  closeButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      button.closest(".modal").style.display = "none";
-    });
-  });
-
-  // Fermer la modale si on clique en dehors de celle-ci
-  window.addEventListener("click", (event) => {
-    if (event.target.classList.contains("modal")) {
-      event.target.style.display = "none";
-    }
-  });
-}
 // Fonction pour afficher le contenu de la galerie dans la modale
 function showGalleryContent() {
-  document.getElementById("modalGallery").style.display = "grid";
+  document.getElementById("galleryContent").style.display = "block";
   document.getElementById("addPhotoContent").style.display = "none";
 }
 
 // Fonction pour afficher le formulaire d'ajout de photo dans la modale
 function showAddPhotoContent() {
-  document.getElementById("modalGallery").style.display = "none";
+  document.getElementById("galleryContent").style.display = "none";
   document.getElementById("addPhotoContent").style.display = "block";
 }
-
-// Fonction pour prévisualiser l'image
-function previewImage(event) {
-  const output = document.getElementById("imagePreview");
-  output.src = URL.createObjectURL(event.target.files[0]);
-  output.onload = function () {
-    URL.revokeObjectURL(output.src); // Libérer la mémoire
-  };
-  output.style.display = "block";
-}
-
 // Fonction pour afficher les catégories dans l'interface utilisateur
 function displayCategories() {
   const buttonFilter = document.getElementById("buttonFilter");
@@ -192,10 +149,14 @@ function displayWork(categoryId = null) {
     workImage.src = work.imageUrl;
     const workCaption = document.createElement("figcaption");
     workCaption.textContent = work.title;
+    // Ajout du bouton de suppression
+    const deleteButton = document.createElement("button");
+    deleteButton.innerText = "Supprimer";
+    deleteButton.onclick = () => confirmDelete(work.id, workFigure);
 
     workFigure.appendChild(workImage);
     workFigure.appendChild(workCaption);
-
+    workFigure.appendChild(deleteButton); // Ajouter le bouton à la figure
     gallery.appendChild(workFigure);
   });
 }
@@ -217,11 +178,7 @@ async function deleteWork(workId, workElement) {
     });
 
     if (response.ok) {
-      // Supprime l'élément du tableau `works` en utilisant `filter` pour ne garder que les éléments dont l'ID est différent
-      works = works.filter((work) => work.id !== workId);
       workElement.remove(); // Supprimer l'élément du DOM
-      await loadWork();
-      displayWork();
     } else {
       console.error("Erreur lors de la suppression");
     }
@@ -232,11 +189,9 @@ async function deleteWork(workId, workElement) {
 
 async function handlePhotoSubmit(event) {
   event.preventDefault();
-  const formData = new FormData();
-  const titlePhotoValue = document.getElementById("titrePhoto").value;
-  const categoriePhotoValue = document.getElementById("categoriePhoto").value;
-  formData.append("title", titlePhotoValue);
-  formData.append("category", categoriePhotoValue);
+  const form = event.target;
+  const formData = new FormData(form);
+
   // Simple validation example
   if (!formData.get("photoUpload") || !formData.get("titrePhoto")) {
     alert("Veuillez remplir tous les champs nécessaires.");
@@ -276,19 +231,16 @@ function displayWorkInModal() {
 
   works.forEach((work) => {
     const workFigure = document.createElement("figure");
-    workFigure.className = "work-item"; // Classe pour le style CSS
     const workImage = document.createElement("img");
     workImage.src = work.imageUrl;
-    workImage.alt = work.title; // Ajouter un alt text pour l'accessibilité
     const workCaption = document.createElement("figcaption");
     workCaption.textContent = work.title;
 
-    // Création de l'icône de suppression directement dans le HTML
-    const trashIcon = document.createElement("i");
-    trashIcon.className = "fas fa-trash-alt trash-icon";
-    trashIcon.onclick = () => confirmDelete(work.id, workFigure);
+    // Ajout du bouton de suppression
+    const deleteButton = document.createElement("button");
+    deleteButton.innerText = "Supprimer";
+    deleteButton.onclick = () => confirmDelete(work.id, workFigure);
 
-    workFigure.appendChild(trashIcon);
     workFigure.appendChild(workImage);
     workFigure.appendChild(workCaption);
     modalGallery.appendChild(workFigure);
@@ -339,26 +291,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (loginForm) {
     loginForm.addEventListener("submit", handleLoginForm);
   }
-  const btnOpenAddPhoto = document.getElementById("btnOpenAddPhoto");
-  btnOpenAddPhoto.addEventListener("click", showAddPhotoContent);
 
-  // Gestionnaire d'événements pour retourner à la galerie depuis le formulaire d'ajout de photo
-  const btnBackToGallery = document.getElementById("btnBackToGallery");
-  btnBackToGallery.addEventListener("click", showGalleryContent);
-
-  // Gestionnaire d'événements pour prévisualiser l'image téléchargée
-  const realFileUpload = document.getElementById("real-file-upload");
-  realFileUpload.addEventListener("change", previewImage);
-
+  await loadCategories();
+  await loadWork();
+  initializeModal();
+  // Ajouter l'écouteur d'événements pour le formulaire d'ajout de photos
   const formAjoutPhoto = document.getElementById("formAjoutPhoto");
   if (formAjoutPhoto) {
     formAjoutPhoto.addEventListener("submit", handlePhotoSubmit);
   }
-  // Chargement des catégories et des travaux initiaux
-  await loadCategories();
-  await loadWork();
-
-  // Initialisation des modales et des écouteurs d'événements
-  initializeModal();
-  setupModalEventListeners(); // Ajout de cette ligne pour initialiser les écouteurs d'événements de la modale
 });

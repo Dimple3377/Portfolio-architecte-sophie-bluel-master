@@ -375,7 +375,6 @@ footer nav ul {
 /* Style de la modale */
 
 .modal {
-  display: none; /* Caché par défaut, sera affiché quand nécessaire */
   position: fixed;
   z-index: 1000; /* Z-index élevé pour s'assurer qu'elle soit au-dessus des autres éléments */
   left: 0;
@@ -516,11 +515,8 @@ footer nav ul {
   left: 0;
   top: 0;
   opacity: 0;
-  display: block;
 }
-#imagePreview {
-  width: 50px;
-}
+
 .upload-btn-wrapper {
   text-align: center;
   background-color: #f0f0f0;

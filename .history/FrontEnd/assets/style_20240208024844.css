@@ -382,16 +382,16 @@ footer nav ul {
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.6);
+  overflow: auto; /* Permettre le scroll si le contenu est plus grand que l'écran */
+  background-color: rgba(0, 0, 0, 0.6); /* Fond semi-transparent noir */
 }
 #modalAjoutPhoto figcaption {
   display: none; /* Cela cache les éléments <figcaption> uniquement dans la modale */
 }
 .separator {
-  height: 2px;
-  background-color: gainsboro;
-  margin: 20px 0;
+  height: 2px; /* Épaisseur de la ligne */
+  background-color: gainsboro; /* Couleur de la ligne */
+  margin: 20px 0; /* Espace au-dessus et en dessous de la ligne */
 }
 .modal-content {
   background-color: #fff;
@@ -414,11 +414,12 @@ footer nav ul {
   top: 0;
   right: 0;
 
-  color: black;
-  padding: 5px;
+  color: black; /* Icône blanche */
+  padding: 5px; /* Espace autour de l'icône */
   cursor: pointer;
-  border-radius: 0;
-  font-size: 30px;
+  border-radius: 0; /* Carré */
+  font-size: 30px; /* Taille de l'icône */
+  z-index: 10; /* Assurez-vous qu'il est au-dessus des autres éléments */
 }
 
 .close:hover,
@@ -494,10 +495,11 @@ footer nav ul {
 }
 /* Ajouts au CSS existant pour la nouvelle modale */
 .modal-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: flex; /* Utiliser flexbox pour la mise en page */
+  flex-direction: column; /* Organiser les enfants en colonne */
+  align-items: center; /* Centrer les enfants horizontalement */
+  justify-content: center; /* Centrer les enfants verticalement */
+  /* Assurez-vous de ne pas écraser les autres styles du .modal-content */
 }
 
 .modal-content .upload-container {
@@ -516,59 +518,58 @@ footer nav ul {
   left: 0;
   top: 0;
   opacity: 0;
-  display: block;
 }
-#imagePreview {
-  width: 50px;
-}
+
 .upload-btn-wrapper {
   text-align: center;
-  background-color: #f0f0f0;
+  background-color: #f0f0f0; /* Couleur de fond de la zone de téléchargement */
   padding: 20px;
-  border-radius: 10px;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-  width: 100%;
-  max-width: 300px;
+  border-radius: 10px; /* Arrondir les coins */
+  display: flex; /* Utiliser flex pour centrer le contenu à l'intérieur */
+  flex-direction: column; /* Éléments empilés verticalement */
+  align-items: center; /* Centrer les éléments horizontalement */
+  margin-top: 20px; /* Espace au-dessus du wrapper */
+  width: 100%; /* Utiliser toute la largeur disponible */
+  max-width: 300px; /* Largeur maximale du wrapper */
 }
 
 .btn-upload {
-  background-color: #ffffff;
-  color: #000;
+  background-color: #ffffff; /* Couleur de fond pour le bouton */
+  color: #000; /* Couleur du texte */
   padding: 10px 15px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  border-radius: 5px; /* Arrondir les coins du bouton */
+  border: none; /* Supprimer la bordure */
+  cursor: pointer; /* Style du curseur */
+  display: flex; /* Utiliser flexbox pour l'alignement */
+  flex-direction: column; /* Organiser les éléments en colonne */
+  align-items: center; /* Centrer les éléments horizontalement */
+  gap: 10px; /* Espace entre l'icône et le texte */
 }
 
 .icon-upload {
-  font-size: 3em;
-  color: #dcdcdc;
+  font-size: 3em; /* Taille de l'icône */
+  color: #dcdcdc; /* Couleur de l'icône */
 }
 
 .file-types {
-  font-size: 0.8em;
-  color: #666;
-  margin-top: 10px;
+  font-size: 0.8em; /* Taille du texte */
+  color: #666; /* Couleur du texte */
+  margin-top: 10px; /* Espace au-dessus du texte */
 }
 
 /* Style pour les éléments de la galerie dans la modale */
 .work-item {
   position: relative;
+  /* autres styles pour work-item */
 }
 
 .trash-icon {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 0; /* Ajustez si nécessaire */
+  right: 0; /* Ajustez si nécessaire */
   cursor: pointer;
-  color: white;
-
+  color: white; /* Couleur de l'icône, à ajuster selon vos préférences */
+  z-index: 10; /* Assurez-vous que l'icône soit au-dessus de l'image */
   background-color: black;
   padding: 5px;
   border-radius: 0;

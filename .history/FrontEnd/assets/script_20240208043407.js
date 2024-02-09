@@ -105,13 +105,13 @@ function setupModalEventListeners() {
 }
 // Fonction pour afficher le contenu de la galerie dans la modale
 function showGalleryContent() {
-  document.getElementById("modalGallery").style.display = "grid";
+  document.getElementById("galleryContent").style.display = "block";
   document.getElementById("addPhotoContent").style.display = "none";
 }
 
 // Fonction pour afficher le formulaire d'ajout de photo dans la modale
 function showAddPhotoContent() {
-  document.getElementById("modalGallery").style.display = "none";
+  document.getElementById("galleryContent").style.display = "none";
   document.getElementById("addPhotoContent").style.display = "block";
 }
 
@@ -217,11 +217,7 @@ async function deleteWork(workId, workElement) {
     });
 
     if (response.ok) {
-      // Supprime l'élément du tableau `works` en utilisant `filter` pour ne garder que les éléments dont l'ID est différent
-      works = works.filter((work) => work.id !== workId);
       workElement.remove(); // Supprimer l'élément du DOM
-      await loadWork();
-      displayWork();
     } else {
       console.error("Erreur lors de la suppression");
     }
@@ -232,11 +228,9 @@ async function deleteWork(workId, workElement) {
 
 async function handlePhotoSubmit(event) {
   event.preventDefault();
-  const formData = new FormData();
-  const titlePhotoValue = document.getElementById("titrePhoto").value;
-  const categoriePhotoValue = document.getElementById("categoriePhoto").value;
-  formData.append("title", titlePhotoValue);
-  formData.append("category", categoriePhotoValue);
+  const form = event.target;
+  const formData = new FormData(form);
+
   // Simple validation example
   if (!formData.get("photoUpload") || !formData.get("titrePhoto")) {
     alert("Veuillez remplir tous les champs nécessaires.");
@@ -339,26 +333,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (loginForm) {
     loginForm.addEventListener("submit", handleLoginForm);
   }
-  const btnOpenAddPhoto = document.getElementById("btnOpenAddPhoto");
-  btnOpenAddPhoto.addEventListener("click", showAddPhotoContent);
 
-  // Gestionnaire d'événements pour retourner à la galerie depuis le formulaire d'ajout de photo
-  const btnBackToGallery = document.getElementById("btnBackToGallery");
-  btnBackToGallery.addEventListener("click", showGalleryContent);
-
-  // Gestionnaire d'événements pour prévisualiser l'image téléchargée
-  const realFileUpload = document.getElementById("real-file-upload");
-  realFileUpload.addEventListener("change", previewImage);
-
+  await loadCategories();
+  await loadWork();
+  initializeModal();
+  // Ajout de l'écouteur d'événements pour le formulaire d'ajout de photos
   const formAjoutPhoto = document.getElementById("formAjoutPhoto");
   if (formAjoutPhoto) {
     formAjoutPhoto.addEventListener("submit", handlePhotoSubmit);
   }
-  // Chargement des catégories et des travaux initiaux
-  await loadCategories();
-  await loadWork();
-
-  // Initialisation des modales et des écouteurs d'événements
-  initializeModal();
   setupModalEventListeners(); // Ajout de cette ligne pour initialiser les écouteurs d'événements de la modale
 });

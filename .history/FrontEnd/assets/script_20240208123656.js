@@ -236,7 +236,6 @@ async function handlePhotoSubmit(event) {
   const titlePhotoValue = document.getElementById("titrePhoto").value;
   const categoriePhotoValue = document.getElementById("categoriePhoto").value;
   formData.append("title", titlePhotoValue);
-  formData.append("category", categoriePhotoValue);
   // Simple validation example
   if (!formData.get("photoUpload") || !formData.get("titrePhoto")) {
     alert("Veuillez remplir tous les champs nécessaires.");

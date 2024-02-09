@@ -105,13 +105,13 @@ function setupModalEventListeners() {
 }
 // Fonction pour afficher le contenu de la galerie dans la modale
 function showGalleryContent() {
-  document.getElementById("modalGallery").style.display = "grid";
+  document.getElementById("galleryContent").style.display = "block";
   document.getElementById("addPhotoContent").style.display = "none";
 }
 
 // Fonction pour afficher le formulaire d'ajout de photo dans la modale
 function showAddPhotoContent() {
-  document.getElementById("modalGallery").style.display = "none";
+  document.getElementById("galleryContent").style.display = "none";
   document.getElementById("addPhotoContent").style.display = "block";
 }
 
@@ -220,7 +220,6 @@ async function deleteWork(workId, workElement) {
       // Supprime l'élément du tableau `works` en utilisant `filter` pour ne garder que les éléments dont l'ID est différent
       works = works.filter((work) => work.id !== workId);
       workElement.remove(); // Supprimer l'élément du DOM
-      await loadWork();
       displayWork();
     } else {
       console.error("Erreur lors de la suppression");
@@ -232,11 +231,9 @@ async function deleteWork(workId, workElement) {
 
 async function handlePhotoSubmit(event) {
   event.preventDefault();
-  const formData = new FormData();
-  const titlePhotoValue = document.getElementById("titrePhoto").value;
-  const categoriePhotoValue = document.getElementById("categoriePhoto").value;
-  formData.append("title", titlePhotoValue);
-  formData.append("category", categoriePhotoValue);
+  const form = event.target;
+  const formData = new FormData(form);
+
   // Simple validation example
   if (!formData.get("photoUpload") || !formData.get("titrePhoto")) {
     alert("Veuillez remplir tous les champs nécessaires.");

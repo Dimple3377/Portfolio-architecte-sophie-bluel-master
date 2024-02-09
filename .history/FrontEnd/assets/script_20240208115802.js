@@ -105,13 +105,13 @@ function setupModalEventListeners() {
 }
 // Fonction pour afficher le contenu de la galerie dans la modale
 function showGalleryContent() {
-  document.getElementById("modalGallery").style.display = "grid";
+  document.getElementById("galleryContent").style.display = "block";
   document.getElementById("addPhotoContent").style.display = "none";
 }
 
 // Fonction pour afficher le formulaire d'ajout de photo dans la modale
 function showAddPhotoContent() {
-  document.getElementById("modalGallery").style.display = "none";
+  document.getElementById("galleryContent").style.display = "none";
   document.getElementById("addPhotoContent").style.display = "block";
 }
 
@@ -199,7 +199,17 @@ function displayWork(categoryId = null) {
     gallery.appendChild(workFigure);
   });
 }
-
+function refreshGallery() {
+  const galleryElement = document.getElementById("gallery");
+  if (galleryElement) {
+    galleryElement.innerHTML = ""; // Vide la galerie
+    works.forEach((work) => {
+      // Créez et ajoutez à nouveau chaque élément de travail à la galerie
+      const workElement = createWorkElement(work); // Suppose une fonction créant un élément DOM pour un travail
+      galleryElement.appendChild(workElement);
+    });
+  }
+}
 function confirmDelete(workId, workElement) {
   // Afficher la modale de suppression et attacher l'événement de suppression
   const confirmDeleteButton = document.getElementById("confirmDelete");
@@ -232,11 +242,9 @@ async function deleteWork(workId, workElement) {
 
 async function handlePhotoSubmit(event) {
   event.preventDefault();
-  const formData = new FormData();
-  const titlePhotoValue = document.getElementById("titrePhoto").value;
-  const categoriePhotoValue = document.getElementById("categoriePhoto").value;
-  formData.append("title", titlePhotoValue);
-  formData.append("category", categoriePhotoValue);
+  const form = event.target;
+  const formData = new FormData(form);
+
   // Simple validation example
   if (!formData.get("photoUpload") || !formData.get("titrePhoto")) {
     alert("Veuillez remplir tous les champs nécessaires.");

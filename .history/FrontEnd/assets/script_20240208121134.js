@@ -105,7 +105,7 @@ function setupModalEventListeners() {
 }
 // Fonction pour afficher le contenu de la galerie dans la modale
 function showGalleryContent() {
-  document.getElementById("modalGallery").style.display = "grid";
+  document.getElementById("modalGallery").style.display = "block";
   document.getElementById("addPhotoContent").style.display = "none";
 }
 
@@ -232,11 +232,9 @@ async function deleteWork(workId, workElement) {
 
 async function handlePhotoSubmit(event) {
   event.preventDefault();
-  const formData = new FormData();
-  const titlePhotoValue = document.getElementById("titrePhoto").value;
-  const categoriePhotoValue = document.getElementById("categoriePhoto").value;
-  formData.append("title", titlePhotoValue);
-  formData.append("category", categoriePhotoValue);
+  const form = event.target;
+  const formData = new FormData(form);
+
   // Simple validation example
   if (!formData.get("photoUpload") || !formData.get("titrePhoto")) {
     alert("Veuillez remplir tous les champs nécessaires.");

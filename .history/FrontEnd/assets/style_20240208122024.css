@@ -517,10 +517,9 @@ footer nav ul {
   top: 0;
   opacity: 0;
   display: block;
-}
-#imagePreview {
   width: 50px;
 }
+
 .upload-btn-wrapper {
   text-align: center;
   background-color: #f0f0f0;

@@ -382,16 +382,16 @@ footer nav ul {
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.6);
+  overflow: auto; /* Permettre le scroll si le contenu est plus grand que l'écran */
+  background-color: rgba(0, 0, 0, 0.6); /* Fond semi-transparent noir */
 }
 #modalAjoutPhoto figcaption {
   display: none; /* Cela cache les éléments <figcaption> uniquement dans la modale */
 }
 .separator {
-  height: 2px;
-  background-color: gainsboro;
-  margin: 20px 0;
+  height: 2px; /* Épaisseur de la ligne */
+  background-color: gainsboro; /* Couleur de la ligne */
+  margin: 20px 0; /* Espace au-dessus et en dessous de la ligne */
 }
 .modal-content {
   background-color: #fff;
@@ -414,11 +414,12 @@ footer nav ul {
   top: 0;
   right: 0;
 
-  color: black;
-  padding: 5px;
+  color: black; /* Icône blanche */
+  padding: 5px; /* Espace autour de l'icône */
   cursor: pointer;
-  border-radius: 0;
-  font-size: 30px;
+  border-radius: 0; /* Carré */
+  font-size: 30px; /* Taille de l'icône */
+  z-index: 10; /* Assurez-vous qu'il est au-dessus des autres éléments */
 }
 
 .close:hover,
@@ -516,11 +517,8 @@ footer nav ul {
   left: 0;
   top: 0;
   opacity: 0;
-  display: block;
 }
-#imagePreview {
-  width: 50px;
-}
+
 .upload-btn-wrapper {
   text-align: center;
   background-color: #f0f0f0;
@@ -568,7 +566,7 @@ footer nav ul {
   right: 0;
   cursor: pointer;
   color: white;
-
+  z-index: 10;
   background-color: black;
   padding: 5px;
   border-radius: 0;

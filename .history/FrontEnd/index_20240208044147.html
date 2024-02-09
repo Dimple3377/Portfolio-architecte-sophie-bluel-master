@@ -192,7 +192,7 @@
               id="real-file-upload"
               name="photoUpload"
               accept="image/*"
-             
+  
               hidden
             />
 
@@ -203,7 +203,7 @@
             <span class="file-types">jpg, png : 4mo max</span>
           </div>
           <!-- Ici se termine le nouveau bouton d'ajout de photo -->
-          <form id="formAjoutPhoto">
+          <form id="formAjoutPhoto" onsubmit="handlePhotoSubmit(event)">
             <img
               id="imagePreview"
               src="#"
