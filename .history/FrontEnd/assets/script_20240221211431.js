@@ -160,7 +160,7 @@ function previewImage(event) {
   const output = document.getElementById("imagePreview");
   output.src = URL.createObjectURL(event.target.files[0]);
   output.onload = function () {
-    URL.revokeObjectURL(output.src);
+    URL.revokeObjectURL(output.src); // Libérer la mémoire
   };
   output.style.display = "block";
 }

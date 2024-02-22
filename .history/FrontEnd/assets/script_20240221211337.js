@@ -116,7 +116,28 @@ async function loadCategories() {
     console.error("Erreur lors du chargement des catégories:", error);
   }
 }
+async function recreateWork(work) {
+  try {
+    const response = await fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(work), // Assurez-vous que `work` contient les données nécessaires
+    });
 
+    if (response.ok) {
+      console.log("Travail recréé avec succès.");
+      // Rafraîchir les données affichées, si nécessaire
+      await loadWork();
+    } else {
+      console.error("Erreur lors de la recréation du travail.");
+    }
+  } catch (error) {
+    console.error("Erreur lors de l'appel à l'API:", error);
+  }
+}
 // Modification: Ajout des gestionnaires d'événements pour annuler et fermer la modale
 function setupModalEventListeners() {
   const cancelDeleteButton = document.getElementById("cancelDelete");
@@ -160,7 +181,7 @@ function previewImage(event) {
   const output = document.getElementById("imagePreview");
   output.src = URL.createObjectURL(event.target.files[0]);
   output.onload = function () {
-    URL.revokeObjectURL(output.src);
+    URL.revokeObjectURL(output.src); // Libérer la mémoire
   };
   output.style.display = "block";
 }

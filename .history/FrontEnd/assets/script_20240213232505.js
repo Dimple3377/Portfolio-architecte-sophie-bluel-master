@@ -24,7 +24,7 @@ async function handleLoginForm(event) {
     if (data.token) {
       sessionStorage.setItem("token", data.token);
       window.location.href = "http://127.0.0.1:5500/FrontEnd/index.html";
-      document.getElementById("btnModifier").style.display = "block";
+      //document.getElementById("btnModifier").style.display = "block";
     } else {
       loginError.textContent = "Informations de connexion incorrectes.";
     }
@@ -39,58 +39,24 @@ async function loadInitialData() {
   await loadCategories();
   await loadWork();
 }
-
-// Fonction pour mettre à jour le bouton de connexion/déconnexion
-function updateLoginLogoutButton() {
-  const loginLogoutButton = document.getElementById("loginLogoutButton"); // Assurez-vous d'avoir un bouton avec cet ID dans votre HTML
-  const categoryButtonsContainer = document.getElementById("buttonFilter");
-
-  if (sessionStorage.getItem("token")) {
-    loginLogoutButton.textContent = "logout";
-    loginLogoutButton.removeEventListener("click", handleLoginForm);
-    loginLogoutButton.addEventListener("click", handleLogout);
-    categoryButtonsContainer.style.display = "none";
-  } else {
-    loginLogoutButton.textContent = "login";
-    loginLogoutButton.removeEventListener("click", handleLogout);
-    loginLogoutButton.addEventListener(
-      "click",
-      () => (window.location.href = "login.html")
-    );
-
-    buttonFilter.style.display = "flex";
-  }
-}
-
-// Fonction de déconnexion
-function handleLogout() {
-  sessionStorage.removeItem("token");
-  updateLoginLogoutButton();
-  window.location.href = "index.html"; // Redirection vers la page d'accueil ou de connexion
-}
-
-// Attacher les fonctions aux événements appropriés une fois le DOM chargé
-document.addEventListener("DOMContentLoaded", async () => {
-  // Vérification de la connexion de l'utilisateur et mise à jour du bouton de connexion/déconnexion
-  updateLoginLogoutButton();
-});
 // Fonction appelée après une connexion réussie
 function postLoginSuccess() {
   document.getElementById("btnModifier").style.display = "block";
   window.location.href = "http://127.0.0.1:5500/FrontEnd/index.html";
 }
 // Fonction asynchrone pour charger les travaux depuis l'API
-async function loadWork() {
+// Fonction asynchrone pour charger les travaux depuis l'API
+async function loadWork(includeDeleted = false) {
   try {
+    let url = "http://localhost:5678/api/works";
+    if (includeDeleted) {
+      url += "?includeDeleted=true";
+    }
     const response = await fetch("http://localhost:5678/api/works", {
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
     });
-
-    if (!response.ok) {
-      throw new Error("Erreur lors du chargement des travaux");
-    }
 
     works = await response.json();
     console.log("Travaux chargés:", works);
@@ -116,7 +82,6 @@ async function loadCategories() {
     console.error("Erreur lors du chargement des catégories:", error);
   }
 }
-
 // Modification: Ajout des gestionnaires d'événements pour annuler et fermer la modale
 function setupModalEventListeners() {
   const cancelDeleteButton = document.getElementById("cancelDelete");
@@ -160,7 +125,7 @@ function previewImage(event) {
   const output = document.getElementById("imagePreview");
   output.src = URL.createObjectURL(event.target.files[0]);
   output.onload = function () {
-    URL.revokeObjectURL(output.src);
+    URL.revokeObjectURL(output.src); // Libérer la mémoire
   };
   output.style.display = "block";
 }
@@ -204,8 +169,8 @@ function displayCategories() {
   // Remplir avec les catégories chargées
   categories.forEach((category) => {
     const option = document.createElement("option");
-    option.value = category.id;
-    option.textContent = category.name;
+    option.value = category.id; // Supposons que chaque catégorie a un champ 'id'
+    option.textContent = category.name; // Et un champ 'name'
     categoriePhotoSelect.appendChild(option);
   });
 }
@@ -275,22 +240,18 @@ async function handlePhotoSubmit(event) {
   const formData = new FormData();
   const titlePhotoValue = document.getElementById("titrePhoto").value;
   const categoriePhotoValue = document.getElementById("categoriePhoto").value;
-  const photoUpload = document.getElementById("real-file-upload").files[0];
-
+  formData.append("title", titlePhotoValue);
+  formData.append("category", categoriePhotoValue);
   //exemple
-  if (!photoUpload || !titlePhotoValue) {
+  if (!formData.get("photoUpload") || !formData.get("titrePhoto")) {
     alert("Veuillez remplir tous les champs nécessaires.");
     return;
   }
 
-  formData.append("title", titlePhotoValue);
-  formData.append("category", categoriePhotoValue);
-  formData.append("image", photoUpload);
-
   try {
     const response = await fetch("http://localhost:5678/api/works", {
       method: "POST",
-      body: formData,
+      body: formData, // Do not set Content-Type header when using FormData
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -323,7 +284,7 @@ function displayWorkInModal() {
     workFigure.className = "work-item"; // Classe pour le style CSS
     const workImage = document.createElement("img");
     workImage.src = work.imageUrl;
-    workImage.alt = work.title;
+    workImage.alt = work.title; // Ajouter un alt text pour l'accessibilité
     const workCaption = document.createElement("figcaption");
     workCaption.textContent = work.title;
 
@@ -383,41 +344,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (loginForm) {
     loginForm.addEventListener("submit", handleLoginForm);
   }
-
-  // Gestionnaire d'événements pour le bouton d'ajout de photo qui ouvre le sélecteur de fichier
-  const btnUpload = document.querySelector(".btn-upload");
-  if (btnUpload) {
-    btnUpload.addEventListener("click", function () {
-      document.getElementById("real-file-upload").click();
-    });
-  }
-
   const btnOpenAddPhoto = document.getElementById("btnOpenAddPhoto");
-  if (btnOpenAddPhoto) {
-    btnOpenAddPhoto.addEventListener("click", function () {
-      this.style.display = "none"; // Cache le bouton après le clic
-      // Trouve le séparateur et le bouton Valider
-      const separator = document.querySelector(".separator");
-      const btnValider = document.getElementById("btnValider");
+  btnOpenAddPhoto.addEventListener("click", showAddPhotoContent);
 
-      // Déplace le séparateur pour qu'il soit juste au-dessus du bouton Valider
-      if (btnValider && separator) {
-        btnValider.parentNode.insertBefore(separator, btnValider);
-      }
-      showAddPhotoContent(); // Fonction pour afficher le formulaire d'ajout de photo
-    });
-  }
   // Gestionnaire d'événements pour retourner à la galerie depuis le formulaire d'ajout de photo
   const btnBackToGallery = document.getElementById("btnBackToGallery");
-  if (btnBackToGallery) {
-    btnBackToGallery.addEventListener("click", function () {
-      const btnOpenAddPhoto = document.getElementById("btnOpenAddPhoto");
-      if (btnOpenAddPhoto) {
-        btnOpenAddPhoto.style.display = "block"; // Rend le bouton à nouveau visible
-      }
-      showGalleryContent(); // Montre à nouveau le contenu de la galerie
-    });
-  }
+  btnBackToGallery.addEventListener("click", showGalleryContent);
 
   // Gestionnaire d'événements pour prévisualiser l'image téléchargée
   const realFileUpload = document.getElementById("real-file-upload");

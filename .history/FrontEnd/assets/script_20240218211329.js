@@ -39,41 +39,6 @@ async function loadInitialData() {
   await loadCategories();
   await loadWork();
 }
-
-// Fonction pour mettre à jour le bouton de connexion/déconnexion
-function updateLoginLogoutButton() {
-  const loginLogoutButton = document.getElementById("loginLogoutButton"); // Assurez-vous d'avoir un bouton avec cet ID dans votre HTML
-  const categoryButtonsContainer = document.getElementById("buttonFilter");
-
-  if (sessionStorage.getItem("token")) {
-    loginLogoutButton.textContent = "logout";
-    loginLogoutButton.removeEventListener("click", handleLoginForm);
-    loginLogoutButton.addEventListener("click", handleLogout);
-    categoryButtonsContainer.style.display = "none";
-  } else {
-    loginLogoutButton.textContent = "login";
-    loginLogoutButton.removeEventListener("click", handleLogout);
-    loginLogoutButton.addEventListener(
-      "click",
-      () => (window.location.href = "login.html")
-    );
-
-    buttonFilter.style.display = "flex";
-  }
-}
-
-// Fonction de déconnexion
-function handleLogout() {
-  sessionStorage.removeItem("token");
-  updateLoginLogoutButton();
-  window.location.href = "index.html"; // Redirection vers la page d'accueil ou de connexion
-}
-
-// Attacher les fonctions aux événements appropriés une fois le DOM chargé
-document.addEventListener("DOMContentLoaded", async () => {
-  // Vérification de la connexion de l'utilisateur et mise à jour du bouton de connexion/déconnexion
-  updateLoginLogoutButton();
-});
 // Fonction appelée après une connexion réussie
 function postLoginSuccess() {
   document.getElementById("btnModifier").style.display = "block";
@@ -116,7 +81,6 @@ async function loadCategories() {
     console.error("Erreur lors du chargement des catégories:", error);
   }
 }
-
 // Modification: Ajout des gestionnaires d'événements pour annuler et fermer la modale
 function setupModalEventListeners() {
   const cancelDeleteButton = document.getElementById("cancelDelete");
@@ -160,7 +124,7 @@ function previewImage(event) {
   const output = document.getElementById("imagePreview");
   output.src = URL.createObjectURL(event.target.files[0]);
   output.onload = function () {
-    URL.revokeObjectURL(output.src);
+    URL.revokeObjectURL(output.src); // Libérer la mémoire
   };
   output.style.display = "block";
 }
@@ -204,8 +168,8 @@ function displayCategories() {
   // Remplir avec les catégories chargées
   categories.forEach((category) => {
     const option = document.createElement("option");
-    option.value = category.id;
-    option.textContent = category.name;
+    option.value = category.id; // Supposons que chaque catégorie a un champ 'id'
+    option.textContent = category.name; // Et un champ 'name'
     categoriePhotoSelect.appendChild(option);
   });
 }
@@ -270,6 +234,23 @@ async function deleteWork(workId, workElement) {
   }
 }
 
+function adjustLoginLogoutButton() {
+  const loginLogoutButton = document.getElementById("loginLogoutButton");
+  if (sessionStorage.getItem("token")) {
+    loginLogoutButton.textContent = "Logout";
+    // Ajoutez une action pour gérer la déconnexion ici
+    loginLogoutButton.href = "javascript:void(0);";
+    loginLogoutButton.onclick = function () {
+      sessionStorage.removeItem("token");
+      adjustLoginLogoutButton(); // Mettez à jour le bouton après la déconnexion
+      window.location.href = "index.html"; // Redirigez ou actualisez la page comme nécessaire
+    };
+  } else {
+    loginLogoutButton.textContent = "Login";
+    loginLogoutButton.href = "login.html";
+    loginLogoutButton.onclick = null; // Enlever le gestionnaire d'événement précédent s'il existe
+  }
+}
 async function handlePhotoSubmit(event) {
   event.preventDefault();
   const formData = new FormData();
@@ -323,7 +304,7 @@ function displayWorkInModal() {
     workFigure.className = "work-item"; // Classe pour le style CSS
     const workImage = document.createElement("img");
     workImage.src = work.imageUrl;
-    workImage.alt = work.title;
+    workImage.alt = work.title; // Ajouter un alt text pour l'accessibilité
     const workCaption = document.createElement("figcaption");
     workCaption.textContent = work.title;
 
@@ -374,6 +355,7 @@ function initializeModal() {
 
 // Attacher les fonctions aux événements appropriés une fois le DOM chargé
 document.addEventListener("DOMContentLoaded", async () => {
+  adjustLoginLogoutButton();
   // Vérification de la connexion de l'utilisateur
   if (sessionStorage.getItem("token")) {
     document.getElementById("btnModifier").style.display = "block";
@@ -415,7 +397,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (btnOpenAddPhoto) {
         btnOpenAddPhoto.style.display = "block"; // Rend le bouton à nouveau visible
       }
-      showGalleryContent(); // Montre à nouveau le contenu de la galerie
+      showGalleryContent(); // Supposé montrer à nouveau le contenu de la galerie
     });
   }
 

@@ -176,11 +176,6 @@ nav li {
   padding: 0 15px;
   font-size: 1.2em;
 }
-
-a {
-  color: black;
-}
-
 .footer-login {
   position: relative;
   height: 100px;
@@ -392,7 +387,6 @@ footer nav ul {
   justify-content: center;
   align-items: center;
   margin: 5rem;
-  margin-bottom: 0;
 }
 
 /* Style de la modale */

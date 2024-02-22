@@ -357,6 +357,7 @@ footer nav ul {
   color: #fff;
   font-size: 15px;
   cursor: pointer;
+  box-shadow: none;
 }
 
 #login button:hover {

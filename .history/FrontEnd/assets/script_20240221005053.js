@@ -58,7 +58,7 @@ function updateLoginLogoutButton() {
       () => (window.location.href = "login.html")
     );
 
-    buttonFilter.style.display = "flex";
+    buttonFilter.style.display = "block";
   }
 }
 
@@ -116,7 +116,6 @@ async function loadCategories() {
     console.error("Erreur lors du chargement des catégories:", error);
   }
 }
-
 // Modification: Ajout des gestionnaires d'événements pour annuler et fermer la modale
 function setupModalEventListeners() {
   const cancelDeleteButton = document.getElementById("cancelDelete");
@@ -160,7 +159,7 @@ function previewImage(event) {
   const output = document.getElementById("imagePreview");
   output.src = URL.createObjectURL(event.target.files[0]);
   output.onload = function () {
-    URL.revokeObjectURL(output.src);
+    URL.revokeObjectURL(output.src); // Libérer la mémoire
   };
   output.style.display = "block";
 }
@@ -204,8 +203,8 @@ function displayCategories() {
   // Remplir avec les catégories chargées
   categories.forEach((category) => {
     const option = document.createElement("option");
-    option.value = category.id;
-    option.textContent = category.name;
+    option.value = category.id; // Supposons que chaque catégorie a un champ 'id'
+    option.textContent = category.name; // Et un champ 'name'
     categoriePhotoSelect.appendChild(option);
   });
 }
@@ -323,7 +322,7 @@ function displayWorkInModal() {
     workFigure.className = "work-item"; // Classe pour le style CSS
     const workImage = document.createElement("img");
     workImage.src = work.imageUrl;
-    workImage.alt = work.title;
+    workImage.alt = work.title; // Ajouter un alt text pour l'accessibilité
     const workCaption = document.createElement("figcaption");
     workCaption.textContent = work.title;
 
@@ -415,7 +414,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (btnOpenAddPhoto) {
         btnOpenAddPhoto.style.display = "block"; // Rend le bouton à nouveau visible
       }
-      showGalleryContent(); // Montre à nouveau le contenu de la galerie
+      showGalleryContent(); // Supposé montrer à nouveau le contenu de la galerie
     });
   }
 

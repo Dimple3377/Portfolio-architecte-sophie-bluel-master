@@ -135,7 +135,7 @@ body {
   margin: auto;
   font-family: "Work Sans";
   font-size: 14px;
-  min-height: 100vh;
+  min-height: 70vh;
 }
 header {
   display: flex;
@@ -173,29 +173,12 @@ nav ul {
   list-style-type: none;
 }
 nav li {
-  padding: 0 15px;
+  padding: 0 10px;
   font-size: 1.2em;
 }
 
-a {
-  color: black;
-}
-
-.footer-login {
-  position: relative;
-  height: 100px;
-}
-
-.footer-login nav li {
-  margin: 7rem;
-  position: absolute;
-  bottom: 0;
-  margin: -10rem;
-}
-
 li:hover {
-  color: black;
-  font-weight: bold;
+  color: #b1663c;
 }
 #introduction {
   display: flex;
@@ -287,7 +270,7 @@ footer nav ul {
   justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 4rem;
+  margin: 45px;
 }
 
 .button-category {
@@ -334,7 +317,6 @@ footer nav ul {
   text-align: center;
 }
 #login p {
-  margin: 1rem 0;
 }
 
 #login input[type="email"],
@@ -357,6 +339,7 @@ footer nav ul {
   color: #fff;
   font-size: 15px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 #login button:hover {
@@ -392,7 +375,6 @@ footer nav ul {
   justify-content: center;
   align-items: center;
   margin: 5rem;
-  margin-bottom: 0;
 }
 
 /* Style de la modale */

@@ -39,41 +39,6 @@ async function loadInitialData() {
   await loadCategories();
   await loadWork();
 }
-
-// Fonction pour mettre à jour le bouton de connexion/déconnexion
-function updateLoginLogoutButton() {
-  const loginLogoutButton = document.getElementById("loginLogoutButton"); // Assurez-vous d'avoir un bouton avec cet ID dans votre HTML
-  const categoryButtonsContainer = document.getElementById("buttonFilter");
-
-  if (sessionStorage.getItem("token")) {
-    loginLogoutButton.textContent = "logout";
-    loginLogoutButton.removeEventListener("click", handleLoginForm);
-    loginLogoutButton.addEventListener("click", handleLogout);
-    categoryButtonsContainer.style.display = "none";
-  } else {
-    loginLogoutButton.textContent = "login";
-    loginLogoutButton.removeEventListener("click", handleLogout);
-    loginLogoutButton.addEventListener(
-      "click",
-      () => (window.location.href = "login.html")
-    );
-
-    buttonFilter.style.display = "flex";
-  }
-}
-
-// Fonction de déconnexion
-function handleLogout() {
-  sessionStorage.removeItem("token");
-  updateLoginLogoutButton();
-  window.location.href = "index.html"; // Redirection vers la page d'accueil ou de connexion
-}
-
-// Attacher les fonctions aux événements appropriés une fois le DOM chargé
-document.addEventListener("DOMContentLoaded", async () => {
-  // Vérification de la connexion de l'utilisateur et mise à jour du bouton de connexion/déconnexion
-  updateLoginLogoutButton();
-});
 // Fonction appelée après une connexion réussie
 function postLoginSuccess() {
   document.getElementById("btnModifier").style.display = "block";
@@ -116,7 +81,6 @@ async function loadCategories() {
     console.error("Erreur lors du chargement des catégories:", error);
   }
 }
-
 // Modification: Ajout des gestionnaires d'événements pour annuler et fermer la modale
 function setupModalEventListeners() {
   const cancelDeleteButton = document.getElementById("cancelDelete");
@@ -160,7 +124,7 @@ function previewImage(event) {
   const output = document.getElementById("imagePreview");
   output.src = URL.createObjectURL(event.target.files[0]);
   output.onload = function () {
-    URL.revokeObjectURL(output.src);
+    URL.revokeObjectURL(output.src); // Libérer la mémoire
   };
   output.style.display = "block";
 }
@@ -204,8 +168,8 @@ function displayCategories() {
   // Remplir avec les catégories chargées
   categories.forEach((category) => {
     const option = document.createElement("option");
-    option.value = category.id;
-    option.textContent = category.name;
+    option.value = category.id; // Supposons que chaque catégorie a un champ 'id'
+    option.textContent = category.name; // Et un champ 'name'
     categoriePhotoSelect.appendChild(option);
   });
 }
@@ -270,47 +234,6 @@ async function deleteWork(workId, workElement) {
   }
 }
 
-async function handlePhotoSubmit(event) {
-  event.preventDefault();
-  const formData = new FormData();
-  const titlePhotoValue = document.getElementById("titrePhoto").value;
-  const categoriePhotoValue = document.getElementById("categoriePhoto").value;
-  const photoUpload = document.getElementById("real-file-upload").files[0];
-
-  //exemple
-  if (!photoUpload || !titlePhotoValue) {
-    alert("Veuillez remplir tous les champs nécessaires.");
-    return;
-  }
-
-  formData.append("title", titlePhotoValue);
-  formData.append("category", categoriePhotoValue);
-  formData.append("image", photoUpload);
-
-  try {
-    const response = await fetch("http://localhost:5678/api/works", {
-      method: "POST",
-      body: formData,
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    });
-
-    if (response.ok) {
-      const newWork = await response.json();
-      works.push(newWork); // Ajouter au tableau local
-      displayWork(); // Actualiser la galerie
-      showGalleryContent(); // Afficher la galerie et cacher le formulaire
-    } else {
-      const error = await response.json();
-      alert(`Erreur lors de l'ajout : ${error.message}`);
-    }
-  } catch (error) {
-    console.error("Erreur lors de l'appel à l'API:", error);
-    alert("Erreur lors de la connexion à l'API.");
-  }
-}
-
 // Nouvelle fonction pour afficher les travaux dans la modale
 function displayWorkInModal() {
   const modalGallery = document.getElementById("modalGallery");
@@ -323,7 +246,7 @@ function displayWorkInModal() {
     workFigure.className = "work-item"; // Classe pour le style CSS
     const workImage = document.createElement("img");
     workImage.src = work.imageUrl;
-    workImage.alt = work.title;
+    workImage.alt = work.title; // Ajouter un alt text pour l'accessibilité
     const workCaption = document.createElement("figcaption");
     workCaption.textContent = work.title;
 
@@ -347,6 +270,62 @@ function initializeModal() {
   const btnBackToGallery = document.getElementById("btnBackToGallery");
   const closeSpan = modalAjoutPhoto.querySelector(".close");
 
+  function adjustLoginLogoutButton() {
+    const loginLogoutButton = document.getElementById("loginLogoutButton");
+    if (sessionStorage.getItem("token")) {
+      loginLogoutButton.textContent = "Logout";
+      loginLogoutButton.onclick = function () {
+        sessionStorage.removeItem("token");
+        adjustLoginLogoutButton(); // Met à jour l'état du bouton après la déconnexion
+        window.location.href = "index.html"; // Rediriger l'utilisateur comme nécessaire
+      };
+    } else {
+      loginLogoutButton.textContent = "Login";
+      loginLogoutButton.href = "login.html";
+      loginLogoutButton.onclick = null; // Supprime le gestionnaire d'événements précédent
+    }
+  }
+
+  async function handlePhotoSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData();
+    const titlePhotoValue = document.getElementById("titrePhoto").value;
+    const categoriePhotoValue = document.getElementById("categoriePhoto").value;
+    const photoUpload = document.getElementById("real-file-upload").files[0];
+
+    //exemple
+    if (!photoUpload || !titlePhotoValue) {
+      alert("Veuillez remplir tous les champs nécessaires.");
+      return;
+    }
+
+    formData.append("title", titlePhotoValue);
+    formData.append("category", categoriePhotoValue);
+    formData.append("image", photoUpload);
+
+    try {
+      const response = await fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
+      });
+
+      if (response.ok) {
+        const newWork = await response.json();
+        works.push(newWork); // Ajouter au tableau local
+        displayWork(); // Actualiser la galerie
+        showGalleryContent(); // Afficher la galerie et cacher le formulaire
+      } else {
+        const error = await response.json();
+        alert(`Erreur lors de l'ajout : ${error.message}`);
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'appel à l'API:", error);
+      alert("Erreur lors de la connexion à l'API.");
+    }
+  }
   btnModifier.addEventListener("click", () => {
     displayWorkInModal(); // Appel de la nouvelle fonction pour afficher les travaux dans la modale
     showGalleryContent();
@@ -374,6 +353,7 @@ function initializeModal() {
 
 // Attacher les fonctions aux événements appropriés une fois le DOM chargé
 document.addEventListener("DOMContentLoaded", async () => {
+  adjustLoginLogoutButton();
   // Vérification de la connexion de l'utilisateur
   if (sessionStorage.getItem("token")) {
     document.getElementById("btnModifier").style.display = "block";
@@ -415,7 +395,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (btnOpenAddPhoto) {
         btnOpenAddPhoto.style.display = "block"; // Rend le bouton à nouveau visible
       }
-      showGalleryContent(); // Montre à nouveau le contenu de la galerie
+      showGalleryContent(); // Supposé montrer à nouveau le contenu de la galerie
     });
   }
 
