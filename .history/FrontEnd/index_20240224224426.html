@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sophie Bluel - Architecte d'intérieur</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="description" content="" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/84c30950af.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="./assets/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+      <nav>
+        <ul>
+          <li>projets</li>
+          <li>contact</li>
+          <li><a href="login.html" id="loginLogoutButton">login</a></li>
+          <li><i class="fa-brands fa-instagram"></i></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section id="introduction">
+        <figure>
+          <img src="./assets/images/sophie-bluel.png" alt="" />
+        </figure>
+        <article>
+          <h2>Designer d'espace</h2>
+          <p>
+            Je raconte votre histoire, je valorise vos idées. Je vous accompagne
+            de la conception à la livraison finale du chantier.
+          </p>
+          <p>
+            Chaque projet sera étudié en commun, de façon à mettre en valeur les
+            volumes, les matières et les couleurs dans le respect de l’esprit
+            des lieux et le choix adapté des matériaux. Le suivi du chantier
+            sera assuré dans le souci du détail, le respect du planning et du
+            budget.
+          </p>
+          <p>
+            En cas de besoin, une équipe pluridisciplinaire peut-être constituée
+            : architecte DPLG, décorateur(trice)
+          </p>
+        </article>
+      </section>
+      <section id="portfolio">
+        <div class="portfolio-header">
+          <h2>Mes Projets</h2>
+          <button id="btnModifier" class="btn-modifier">
+            <i class="fa-regular fa-pen-to-square"></i>modifier
+          </button>
+          <!-- Bouton Modifier -->
+        </div>
+        <div id="buttonFilter"></div>
+        <div id="gallery" class="gallery">
+          <!--<figure>
+            <img src="assets/images/abajour-tahina.png" alt="Abajour Tahina" />
+            <figcaption>Abajour Tahina</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="assets/images/appartement-paris-v.png"
+              alt="Appartement Paris V"
+            />
+            <figcaption>Appartement Paris V</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="assets/images/restaurant-sushisen-londres.png"
+              alt="Restaurant Sushisen - Londres"
+            />
+            <figcaption>Restaurant Sushisen - Londres</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="assets/images/la-balisiere.png"
+              alt="Villa “La Balisiere” - Port Louis"
+            />
+            <figcaption>Villa “La Balisiere” - Port Louis</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="assets/images/structures-thermopolis.png"
+              alt="Structures Thermopolis"
+            />
+            <figcaption>Structures Thermopolis</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="assets/images/appartement-paris-x.png"
+              alt="Appartement Paris X"
+            />
+            <figcaption>Appartement Paris X</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="assets/images/le-coteau-cassis.png"
+              alt="Pavillon “Le coteau” - Cassis"
+            />
+            <figcaption>Pavillon “Le coteau” - Cassis</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="assets/images/villa-ferneze.png"
+              alt="Villa Ferneze - Isola d’Elba"
+            />
+            <figcaption>Villa Ferneze - Isola d’Elba</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="assets/images/appartement-paris-xviii.png"
+              alt="Appartement Paris XVIII"
+            />
+            <figcaption>Appartement Paris XVIII</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="assets/images/bar-lullaby-paris.png"
+              alt="Bar “Lullaby” - Paris"
+            />
+            <figcaption>Bar “Lullaby” - Paris</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="assets/images/hotel-first-arte-new-delhi.png"
+              alt="Hotel First Arte - New Delhi"
+            />
+            <figcaption>Hotel First Arte - New Delhi</figcaption>
+          </figure>-->
+        </div>
+      </section>
+      <section id="contact">
+        <h2>Contact</h2>
+        <p>Vous avez un projet ? Discutons-en !</p>
+        <form action="#" method="post">
+          <label for="name">Nom</label>
+          <input type="text" name="name" id="name" />
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email" />
+          <label for="message">Message</label>
+          <textarea name="message" id="message" cols="30" rows="10"></textarea>
+          <input type="submit" value="Envoyer" />
+        </form>
+      </section>
+    </main>
+
+  
+    <!-- Modale pour Ajouter des photos -->
+    <div id="modalAjoutPhoto" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+
+        <h2 id="modalTitle">Galerie photo</h2>
+        <!-- Conteneur pour afficher les images des travaux dans la modale -->
+        <div id="galleryContent">
+          <div id="modalGallery" class="gallery-grid">
+            <!-- Les images des travaux seront ajoutées ici par le JavaScript -->
+          </div> 
+          
+          <div class="separator"></div>
+          <!-- Bouton pour changer vers le formulaire d'ajout de photo -->
+          <button id="btnOpenAddPhoto" class="btn">Ajouter une photo</button>
+     
+
+       
+
+        <!-- Contenu du formulaire d'ajout de photo, caché par défaut -->
+        <div id="addPhotoContent" style="display: none">
+          <button id="btnBackToGallery">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <!-- Ici commence le nouveau bouton d'ajout de photo -->
+          <div class="upload-btn-wrapper">
+            <input
+              type="file"
+              id="real-file-upload"
+              name="photoUpload"
+              accept="image/*"
+             
+              hidden
+            />
+
+            <i class="fa fa-image icon-upload"></i>
+            <button class="btn-upload">
+              <span>+ Ajouter photo</span>
+            </button>
+            <span class="file-types">jpg, png : 4mo max</span>
+          </div>
+          <!-- Ici se termine le nouveau bouton d'ajout de photo -->
+          <form id="formAjoutPhoto">
+            <img
+              id="imagePreview"
+              src="#"
+              alt="Prévisualisation de l'image"
+              style="display: none"
+            />
+            <p class="formTitle">Titre</p>
+            <input
+              type="text"
+              id="titrePhoto"
+              name="titrePhoto"
+            />
+            <p class="formCategory">Catégorie</p>
+            <select id="categoriePhoto" name="categoriePhoto">
+              <!-- Options de catégories ici -->
+            </select>
+            <button id="btnValider" type="submit" class="btn-inactive" disabled>Valider</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Modale pour l'ajout ou le changement de photo -->
+    <div id="modalChangePhoto" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeChangePhotoModal">&times;</span>
+        <h2>Ajout photo</h2>
+        <div class="upload-container">
+          <div class="upload-btn-wrapper">
+            <button class="btn">Ajouter photo</button>
+            <input type="file" name="myfile" />
+          </div>
+          <input type="text" id="photoTitle" placeholder="Titre" />
+          <select id="photoCategory">
+            <!-- Options de catégories ici -->
+          </select>
+          <button type="submit" id="validatePhotoChange">Valider</button>
+        </div>
+      </div>
+    </div>
+    <!-- Modale de Suppression -->
+    <div id="modalSuppression" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Confirmer la suppression</h2>
+        <p>Êtes-vous sûr de vouloir supprimer ce projet ?</p>
+        <div class="modal-footer">
+          <button id="confirmDelete" class="modal-button">Confirmer</button>
+          <button id="cancelDelete" class="modal-button">Annuler</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <nav>
+        <ul>
+          <li>Mentions Légales</li>
+        </ul>
+      </nav>
+    </footer>
+
+    <script src="assets/script.js"></script>
+  </body>
+</html>
