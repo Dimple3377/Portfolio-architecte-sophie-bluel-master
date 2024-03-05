@@ -447,7 +447,7 @@ textarea:focus {
   background-color: gainsboro;
   margin: 20px 0;
   width: 62%;
-  left: 19%;
+  left: 21%;
   margin-bottom: 2rem;
 }
 
@@ -456,8 +456,8 @@ textarea:focus {
   height: 2px;
   background-color: gainsboro;
   margin: 20px 0;
-  width: 62%;
-  left: 19%;
+  width: 65%;
+  left: 17%;
   bottom: 18%;
 }
 .modal-content {
@@ -563,7 +563,7 @@ textarea:focus {
   padding: 10px 20px;
   border: none;
   cursor: pointer;
-  left: 12%;
+  left: 13%;
   position: relative;
   border-radius: 20px;
   font-family: "Syne";
@@ -583,7 +583,7 @@ textarea:focus {
   font-family: "Syne";
   position: relative;
   width: 80%;
-  left: 12%;
+  left: 15%;
   bottom: 1rem;
 }
 

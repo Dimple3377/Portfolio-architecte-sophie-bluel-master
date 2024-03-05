@@ -2,25 +2,36 @@
 let works = [];
 let categories = [];
 
+// Fonction pour mettre à jour le bouton de connexion/déconnexion
 function updateLoginLogoutButton() {
-  const loginLogoutButton = document.getElementById("loginLogoutButton");
+  const loginLogoutButton = document.getElementById("loginLogoutButton"); // Assurez-vous d'avoir un bouton avec cet ID dans votre HTML
   const editModeButton = document.getElementById("editModeButton");
   const categoryButtonsContainer = document.getElementById("buttonFilter");
 
   if (sessionStorage.getItem("token")) {
-    loginLogoutButton.textContent = "logout";
-    loginLogoutButton.onclick = handleLogout; // Assurez-vous que handleLogout est correctement défini
+    if (loginLogoutButton) {
+      loginLogoutButton.textContent = "logout";
+      loginLogoutButton.removeEventListener("click", handleLoginForm);
+      loginLogoutButton.addEventListener("click", handleLogout);
+    }
 
-    if (editModeButton) editModeButton.classList.remove("hidden");
-    if (categoryButtonsContainer)
+    editModeButton?.classList.remove("hidden"); // Montre le bouton mode édition
+    if (categoryButtonsContainer) {
       categoryButtonsContainer.style.display = "none";
+    }
   } else {
-    loginLogoutButton.textContent = "login";
-    loginLogoutButton.href = "login.html"; // Simplement rediriger, pas besoin d'un écouteur d'événement ici
+    if (loginLogoutButton) {
+      loginLogoutButton.textContent = "login";
+      loginLogoutButton.removeEventListener("click", handleLogout);
+      loginLogoutButton.addEventListener(
+        "click",
+        () => (window.location.href = "login.html")
+      );
+    }
 
-    if (editModeButton) editModeButton.classList.add("hidden");
-    if (categoryButtonsContainer)
-      categoryButtonsContainer.style.display = "flex";
+    if (!isLoginPage()) buttonFilter.style.display = "flex";
+
+    editModeButton?.classList?.add("hidden"); // Cache le bouton mode édition
   }
 }
 
@@ -389,7 +400,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         btnValider.disabled = true;
       }
     });
-
   const btnOpenAddPhoto = document.getElementById("btnOpenAddPhoto");
   if (btnOpenAddPhoto) {
     btnOpenAddPhoto.addEventListener("click", function () {
@@ -430,20 +440,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Si ce script est inclus sur des pages qui nécessitent que l'utilisateur soit connecté :
-  const realFileUpload = document.getElementById("real-file-upload");
-  if (realFileUpload) {
-    realFileUpload.addEventListener("change", previewImage);
-  }
+  if (!isLoginPage()) {
+    // Gestionnaire d'événements pour prévisualiser l'image téléchargée
+    const realFileUpload = document.getElementById("real-file-upload");
+    realFileUpload?.addEventListener("change", previewImage);
 
-  const formAjoutPhoto = document.getElementById("formAjoutPhoto");
-  if (formAjoutPhoto) {
-    formAjoutPhoto.addEventListener("submit", handlePhotoSubmit);
-  }
+    const formAjoutPhoto = document.getElementById("formAjoutPhoto");
+    if (formAjoutPhoto) {
+      formAjoutPhoto.addEventListener("submit", handlePhotoSubmit);
+    }
+    // Chargement des catégories et des travaux initiaux
+    await loadCategories();
+    await loadWork();
 
-  // Ces fonctions doivent être définies pour charger les données nécessaires et initialiser l'UI.
-  await loadCategories();
-  await loadWork();
-  initializeModal();
-  setupModalEventListeners();
+    // Initialisation des modales et des écouteurs d'événements
+    initializeModal();
+    setupModalEventListeners(); // Ajout de cette ligne pour initialiser les écouteurs d'événements de la modale
+  }
 });

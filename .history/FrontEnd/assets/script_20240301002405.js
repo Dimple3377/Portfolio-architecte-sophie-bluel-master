@@ -2,25 +2,36 @@
 let works = [];
 let categories = [];
 
+// Fonction pour mettre à jour le bouton de connexion/déconnexion
 function updateLoginLogoutButton() {
-  const loginLogoutButton = document.getElementById("loginLogoutButton");
+  const loginLogoutButton = document.getElementById("loginLogoutButton"); // Assurez-vous d'avoir un bouton avec cet ID dans votre HTML
   const editModeButton = document.getElementById("editModeButton");
   const categoryButtonsContainer = document.getElementById("buttonFilter");
 
   if (sessionStorage.getItem("token")) {
-    loginLogoutButton.textContent = "logout";
-    loginLogoutButton.onclick = handleLogout; // Assurez-vous que handleLogout est correctement défini
+    if (loginLogoutButton) {
+      loginLogoutButton.textContent = "logout";
+      loginLogoutButton.removeEventListener("click", handleLoginForm);
+      loginLogoutButton.addEventListener("click", handleLogout);
+    }
 
-    if (editModeButton) editModeButton.classList.remove("hidden");
-    if (categoryButtonsContainer)
+    editModeButton?.classList.remove("hidden"); // Montre le bouton mode édition
+    if (categoryButtonsContainer) {
       categoryButtonsContainer.style.display = "none";
+    }
   } else {
-    loginLogoutButton.textContent = "login";
-    loginLogoutButton.href = "login.html"; // Simplement rediriger, pas besoin d'un écouteur d'événement ici
+    if (loginLogoutButton) {
+      loginLogoutButton.textContent = "login";
+      loginLogoutButton.removeEventListener("click", handleLogout);
+      loginLogoutButton.addEventListener(
+        "click",
+        () => (window.location.href = "login.html")
+      );
+    }
 
-    if (editModeButton) editModeButton.classList.add("hidden");
-    if (categoryButtonsContainer)
-      categoryButtonsContainer.style.display = "flex";
+    if (!isLoginPage()) buttonFilter.style.display = "flex";
+
+    editModeButton?.classList?.add("hidden"); // Cache le bouton mode édition
   }
 }
 
@@ -345,105 +356,84 @@ function initializeModal() {
   });
 }
 
-// Attacher les fonctions aux événements appropriés une fois le DOM chargé
-document.addEventListener("DOMContentLoaded", async () => {
-  // Vérification de la connexion de l'utilisateur
-  if (sessionStorage.getItem("token")) {
-    const btnModifierLoad = document.getElementById("btnModifier");
+// Gestionnaire d'événements pour le bouton d'ajout de photo qui ouvre le sélecteur de fichier
+const btnUpload = document.querySelector(".btn-upload");
+if (btnUpload) {
+  btnUpload.addEventListener("click", function () {
+    document.getElementById("real-file-upload").click();
+  });
+}
 
-    if (btnModifierLoad) {
-      btnModifierLoad.style.display = "block";
+document
+  .getElementById("real-file-upload")
+  ?.addEventListener("change", function () {
+    const btnValider = document.getElementById("btnValider");
+    if (this.files.length > 0) {
+      // Si un fichier est sélectionné, activer le bouton
+      btnValider.classList.remove("btn-inactive");
+      btnValider.classList.add("btn-active");
+      btnValider.disabled = false;
+    } else {
+      // Sinon, garder le bouton inactif
+      btnValider.classList.add("btn-inactive");
+      btnValider.classList.remove("btn-active");
+      btnValider.disabled = true;
     }
+  });
+const btnOpenAddPhoto = document.getElementById("btnOpenAddPhoto");
+if (btnOpenAddPhoto) {
+  btnOpenAddPhoto.addEventListener("click", function () {
+    this.style.display = "none"; // Cache le bouton après le clic
+    // Trouve le séparateur et le bouton Valider
+    const separator = document.querySelector(".separator");
+    const btnValider = document.getElementById("btnValider");
 
-    // Ajoutez ici le code pour le bouton "Mode édition"
-    const editModeButton = document.getElementById("editModeButton");
-    if (editModeButton) {
-      editModeButton.classList.remove("hidden"); // S'assurer que le bouton est visible
-      editModeButton.addEventListener("click", function () {
-        document.body.classList.toggle("editing-mode");
-      });
+    // Modifier le texte du titre de la modale pour "Ajout photo"
+    const modalTitle = document.getElementById("modalTitle");
+    if (modalTitle) {
+      modalTitle.textContent = "Ajout photo";
     }
-  }
+    // Assurez-vous que le séparateur est présent
+    if (separator) {
+      // Déplacez le séparateur au-dessus du bouton Valider
 
-  // Gestionnaire d'événements pour le bouton d'ajout de photo qui ouvre le sélecteur de fichier
-  const btnUpload = document.querySelector(".btn-upload");
-  if (btnUpload) {
-    btnUpload.addEventListener("click", function () {
-      document.getElementById("real-file-upload").click();
-    });
-  }
+      separator.classList.add("separator-above-validate");
+      separator.classList.remove("separator-normal-position");
+    }
+    showAddPhotoContent(); // Fonction pour afficher le formulaire d'ajout de photo
+  });
+}
+// Gestionnaire d'événements pour retourner à la galerie depuis le formulaire d'ajout de photo
+const btnBackToGallery = document.getElementById("btnBackToGallery");
+if (btnBackToGallery) {
+  btnBackToGallery.addEventListener("click", function () {
+    const btnOpenAddPhoto = document.getElementById("btnOpenAddPhoto");
+    if (btnOpenAddPhoto) {
+      btnOpenAddPhoto.style.display = "block"; // Rend le bouton à nouveau visible
+    }
+    // Change le texte du titre de la modale en "Galerie photo"
+    const modalTitle = document.getElementById("modalTitle");
+    if (modalTitle) {
+      modalTitle.textContent = "Galerie photo";
+    }
+    showGalleryContent(); // Montre à nouveau le contenu de la galerie
+  });
+}
 
-  document
-    .getElementById("real-file-upload")
-    ?.addEventListener("change", function () {
-      const btnValider = document.getElementById("btnValider");
-      if (this.files.length > 0) {
-        // Si un fichier est sélectionné, activer le bouton
-        btnValider.classList.remove("btn-inactive");
-        btnValider.classList.add("btn-active");
-        btnValider.disabled = false;
-      } else {
-        // Sinon, garder le bouton inactif
-        btnValider.classList.add("btn-inactive");
-        btnValider.classList.remove("btn-active");
-        btnValider.disabled = true;
-      }
-    });
-
-  const btnOpenAddPhoto = document.getElementById("btnOpenAddPhoto");
-  if (btnOpenAddPhoto) {
-    btnOpenAddPhoto.addEventListener("click", function () {
-      this.style.display = "none"; // Cache le bouton après le clic
-      // Trouve le séparateur et le bouton Valider
-      const separator = document.querySelector(".separator");
-      const btnValider = document.getElementById("btnValider");
-
-      // Modifier le texte du titre de la modale pour "Ajout photo"
-      const modalTitle = document.getElementById("modalTitle");
-      if (modalTitle) {
-        modalTitle.textContent = "Ajout photo";
-      }
-      // Assurez-vous que le séparateur est présent
-      if (separator) {
-        // Déplacez le séparateur au-dessus du bouton Valider
-
-        separator.classList.add("separator-above-validate");
-        separator.classList.remove("separator-normal-position");
-      }
-      showAddPhotoContent(); // Fonction pour afficher le formulaire d'ajout de photo
-    });
-  }
-  // Gestionnaire d'événements pour retourner à la galerie depuis le formulaire d'ajout de photo
-  const btnBackToGallery = document.getElementById("btnBackToGallery");
-  if (btnBackToGallery) {
-    btnBackToGallery.addEventListener("click", function () {
-      const btnOpenAddPhoto = document.getElementById("btnOpenAddPhoto");
-      if (btnOpenAddPhoto) {
-        btnOpenAddPhoto.style.display = "block"; // Rend le bouton à nouveau visible
-      }
-      // Change le texte du titre de la modale en "Galerie photo"
-      const modalTitle = document.getElementById("modalTitle");
-      if (modalTitle) {
-        modalTitle.textContent = "Galerie photo";
-      }
-      showGalleryContent(); // Montre à nouveau le contenu de la galerie
-    });
-  }
-
-  // Si ce script est inclus sur des pages qui nécessitent que l'utilisateur soit connecté :
+if (!isLoginPage()) {
+  // Gestionnaire d'événements pour prévisualiser l'image téléchargée
   const realFileUpload = document.getElementById("real-file-upload");
-  if (realFileUpload) {
-    realFileUpload.addEventListener("change", previewImage);
-  }
+  realFileUpload?.addEventListener("change", previewImage);
 
   const formAjoutPhoto = document.getElementById("formAjoutPhoto");
   if (formAjoutPhoto) {
     formAjoutPhoto.addEventListener("submit", handlePhotoSubmit);
   }
-
-  // Ces fonctions doivent être définies pour charger les données nécessaires et initialiser l'UI.
+  // Chargement des catégories et des travaux initiaux
   await loadCategories();
   await loadWork();
+
+  // Initialisation des modales et des écouteurs d'événements
   initializeModal();
-  setupModalEventListeners();
-});
+  setupModalEventListeners(); // Ajout de cette ligne pour initialiser les écouteurs d'événements de la modale
+}

@@ -430,6 +430,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // Assurez-vous que ces fonctionnalités s'exécutent uniquement sur les pages nécessaires.
   // Si ce script est inclus sur des pages qui nécessitent que l'utilisateur soit connecté :
   const realFileUpload = document.getElementById("real-file-upload");
   if (realFileUpload) {
