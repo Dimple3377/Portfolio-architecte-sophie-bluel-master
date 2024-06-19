@@ -31,7 +31,7 @@ function handleLogout() {
   window.location.href = "index.html"; // Redirection vers la page d'accueil ou de connexion
 }
 
-// Attache les fonctions aux événements appropriés une fois le DOM chargé
+// Attacher les fonctions aux événements appropriés une fois le DOM chargé
 document.addEventListener("DOMContentLoaded", async () => {
   // Vérification de la connexion de l'utilisateur et mise à jour du bouton de connexion/déconnexion
   updateLoginLogoutButton();

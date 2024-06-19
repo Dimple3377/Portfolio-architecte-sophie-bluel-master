@@ -16,7 +16,7 @@ function updateLoginLogoutButton() {
       categoryButtonsContainer.style.display = "none";
   } else {
     loginLogoutButton.textContent = "login";
-    loginLogoutButton.href = "login.html";
+    loginLogoutButton.href = "login.html"; // Simplement rediriger, pas besoin d'un écouteur d'événement ici
 
     if (editModeButton) editModeButton.classList.add("hidden");
     if (categoryButtonsContainer)
@@ -31,7 +31,7 @@ function handleLogout() {
   window.location.href = "index.html"; // Redirection vers la page d'accueil ou de connexion
 }
 
-// Attache les fonctions aux événements appropriés une fois le DOM chargé
+// Attacher les fonctions aux événements appropriés une fois le DOM chargé
 document.addEventListener("DOMContentLoaded", async () => {
   // Vérification de la connexion de l'utilisateur et mise à jour du bouton de connexion/déconnexion
   updateLoginLogoutButton();
@@ -214,10 +214,10 @@ function displayWork(categoryId = null) {
 }
 
 function confirmDelete(workId, workElement) {
-  // Affiche la modale de suppression et attacher l'événement de suppression
+  // Afficher la modale de suppression et attacher l'événement de suppression
   const confirmDeleteButton = document.getElementById("confirmDelete");
   confirmDeleteButton.onclick = () => deleteWork(workId, workElement);
-  // Affiche la modale
+  // Afficher la modale
   document.getElementById("modalSuppression").style.display = "block";
 }
 async function deleteWork(workId, workElement) {
@@ -271,10 +271,10 @@ async function handlePhotoSubmit(event) {
 
     if (response.ok) {
       const newWork = await response.json();
-      works.push(newWork); // Ajoute au tableau local
-      displayWork(); // Actualise la galerie
+      works.push(newWork); // Ajouter au tableau local
+      displayWork(); // Actualiser la galerie
       displayWorkInModal();
-      showGalleryContent(); // Affiche la galerie et cacher le formulaire
+      showGalleryContent(); // Afficher la galerie et cacher le formulaire
     } else {
       const error = await response.json();
       alert(`Erreur lors de l'ajout : ${error.message}`);
@@ -346,7 +346,7 @@ function initializeModal() {
   });
 }
 
-// Attache les fonctions aux événements appropriés une fois le DOM chargé
+// Attacher les fonctions aux événements appropriés une fois le DOM chargé
 document.addEventListener("DOMContentLoaded", async () => {
   // Vérification de la connexion de l'utilisateur
   if (sessionStorage.getItem("token")) {
@@ -356,10 +356,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       btnModifierLoad.style.display = "block";
     }
 
-    // bouton "Mode édition"
+    // Ajoutez ici le code pour le bouton "Mode édition"
     const editModeButton = document.getElementById("editModeButton");
     if (editModeButton) {
-      editModeButton.classList.remove("hidden");
+      editModeButton.classList.remove("hidden"); // S'assurer que le bouton est visible
       editModeButton.addEventListener("click", function () {
         document.body.classList.toggle("editing-mode");
       });
@@ -404,9 +404,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (modalTitle) {
         modalTitle.textContent = "Ajout photo";
       }
-      // Assure que le séparateur est présent
+      // Assurez-vous que le séparateur est présent
       if (separator) {
-        // Déplace le séparateur au-dessus du bouton Valider
+        // Déplacez le séparateur au-dessus du bouton Valider
+
         separator.classList.add("separator-above-validate");
         separator.classList.remove("separator-normal-position");
       }

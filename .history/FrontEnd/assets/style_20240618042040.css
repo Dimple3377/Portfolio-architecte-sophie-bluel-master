@@ -617,6 +617,8 @@ textarea:focus {
   transition: transform 0.2s;
 }
 
+#addPhotoContent {
+}
 #modalGallery figcaption {
   text-align: center;
   padding: 5px;

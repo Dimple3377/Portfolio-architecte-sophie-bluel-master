@@ -16,7 +16,7 @@ function updateLoginLogoutButton() {
       categoryButtonsContainer.style.display = "none";
   } else {
     loginLogoutButton.textContent = "login";
-    loginLogoutButton.href = "login.html";
+    loginLogoutButton.href = "login.html"; // Simplement rediriger, pas besoin d'un écouteur d'événement ici
 
     if (editModeButton) editModeButton.classList.add("hidden");
     if (categoryButtonsContainer)
@@ -31,7 +31,7 @@ function handleLogout() {
   window.location.href = "index.html"; // Redirection vers la page d'accueil ou de connexion
 }
 
-// Attache les fonctions aux événements appropriés une fois le DOM chargé
+// Attacher les fonctions aux événements appropriés une fois le DOM chargé
 document.addEventListener("DOMContentLoaded", async () => {
   // Vérification de la connexion de l'utilisateur et mise à jour du bouton de connexion/déconnexion
   updateLoginLogoutButton();
@@ -404,9 +404,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (modalTitle) {
         modalTitle.textContent = "Ajout photo";
       }
-      // Assure que le séparateur est présent
+      // Assurez-vous que le séparateur est présent
       if (separator) {
-        // Déplace le séparateur au-dessus du bouton Valider
+        // Déplacez le séparateur au-dessus du bouton Valider
+
         separator.classList.add("separator-above-validate");
         separator.classList.remove("separator-normal-position");
       }
